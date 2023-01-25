@@ -50,6 +50,16 @@ def landing_page():
 
     return render_template('index.html')
 
+@views.route('/system_tester_tg_il')
+def system_tester_tg_il():
+
+    return render_template('system_tester_tg-il.html')
+
+@views.route('/system_tester_il_tg')
+def system_tester_il_tg():
+
+    return render_template('system_tester_il-tg.html')
+
 @views.route('/il_tag')
 def standard():
 

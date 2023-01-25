@@ -71,7 +71,7 @@
 
     <!-- Template Main CSS File -->
     <link href="../static/css/home_style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../static/css/translator_style.css" />
+    <link rel="stylesheet" href="../static/css/system-tester_style.css" />
   </head>
 
   <body>
@@ -89,9 +89,6 @@
             <li>
               <a class="nav-link scrollto" href="home">Home</a>
             </li>
-            <li>
-              <a class="nav-link scrollto" href="system_tester_il_tg">System Tester</a>
-            </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
@@ -100,56 +97,97 @@
     </header>
     <!-- End Header -->
 
-    <div class="section-title mt-01">
-      <h2>Hybrid Translator</h2>
-    </div>
+    <section id="services" class="services section-bg">
+
+      <div class="container">
+
+        <div class="section-title mt-5">
+          <h2>System Tester</h2>
+          <p>This page allows you to test and view the accuracy of the system in translating Ilokano and Tagalog.</p>
+        </div>
+        
+        <div class="row" style="gap: 2%; justify-content: center;">
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0 border border-2 border-secondary rounded" data-aos="zoom-in" data-aos-delay="200">
+            <div class="icon-box m-3">
+              <div class="icon" style="color: white;"><i class="bx bx-file"></i></div>
+              <h4>Expected Output</h4>
+              <p>The correct translation of the source language text. <br><br> This is needed in order for the system to compute the accuracy.</p>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0 border border-2 border-secondary rounded" data-aos="zoom-in" data-aos-delay="400">
+            <div class="icon-box m-3">
+              <div class="icon" style="color: white;"><i class="bx bx-layer"></i></div>
+              <h4>BLEU and TER</h4>
+              <p>A high BLEU score means that the translated text is accurate. <br><br> A high TER score means the translated text doesn't match the expected output entered. </p>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </section><!-- End Section -->
 
     <!-- ======= Form Section ======= -->
-    <form method="POST" action="/il_tag">
+    <form method="POST" action="/tag_il">
+        
       <div class="container-fluid bg-light">
+        
+        <center>
+            
+        </center>
+          
         <div class="translator_container">
-          <div
-            class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3"
-          >
-            <div class="card-header text-white" id="card-header">
-              <center><h1>ILOKANO</h1></center>
-            </div>
-
-            <div class="card-body">
-              <textarea
-                rows="20"
-                class="form-control"
-                id="id--system-input"
-                name="source_lang"
-              >
-{{source}}</textarea
-              >
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-center justify-content-lg-start">
-            <a href="tag_il" class="btn-get-started scrollto mt-4"
-              ><i class="bi bi-arrow-left-right"></i
-            ></a>
-          </div>
-
-          <div
-            class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3"
-          >
+          <div class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3">
             <div class="card-header text-white" id="card-header">
               <center><h1>TAGALOG</h1></center>
             </div>
 
             <div class="card-body">
-              <textarea
-                rows="20"
-                class="form-control"
-                id="id--system-output"
-                name="system-output"
-                readonly="true"
-              >
- {% for op_sen in op_sen_list %}{{op_sen + "\n"}}{% endfor %}</textarea
-              >
+              <textarea rows="28" class="form-control" id="id--system-input" name="source_lang">{{source}}</textarea>
+            </div>
+          </div>     
+
+         <center>
+          <div>
+            <div class="justify-content-lg-start mt-3">
+              <a href="system_tester_il_tg" class="btn-get-started scrollto mt-4"
+                ><i class="bi bi-arrow-left-right"></i
+              ></a>
+            </div>
+
+            <div class="card bg-light border border-2 border-secondary col-4 rounded mt-4 mb-3" style="height: 370px;">
+                <div class="card-header text-white" id="card-header">
+                  <center><h1>EXPECTED OUTPUT</h1></center>
+                </div>
+
+                <div class="card-body" style="height: 100px;">
+                  <textarea rows="10" class="form-control" id="id--system-input" name="source_lang">{{source}}</textarea>
+                </div>
+              </div>
+            
+
+            <div class="card bg-light border border-2 border-secondary rounded mt-4 mb-3">
+              <div class="card-header text-white" id = "card-header">
+                  <center><h1>RESULTS</h1></center>
+              </div>
+
+              <div class="card-body">
+                  <h5>BLEU</h5>
+                  <textarea type="text" id="BLEU" class="form-control" name="BLEU">{{ave_bleu}}</textarea>
+                  <h5 class = "mt-4">TER</h5>
+                  <textarea type="text" id="TER" class="form-control" name="TER">{{ave_ter}}</textarea>
+              </div> 
+            </div>
+          </div>
+          </center>
+          
+          <div class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3">
+            <div class="card-header text-white" id="card-header">
+              <center><h1>ILOKANO</h1></center>
+            </div>
+
+            <div class="card-body">
+                <textarea rows="28" class="form-control" id="id--system-output" name="system-output" readonly="true">{% for op_sen in op_sen_list %}{{op_sen + "\n"}}{% endfor %}</textarea>
             </div>
           </div>
         </div>
@@ -159,7 +197,7 @@
       <div class="buttons">
         <div class="btn-group">
           <div class="ms-3 me-2 mt-3">
-            <a href="il_tag" class="btn-get-started scrollto">Clear</a>
+            <a href="tag_il" class="btn-get-started scrollto">Clear</a>
           </div>
           <div class="ms-2 mt-1">
             <button id="translate" type="submit">Translate</button>

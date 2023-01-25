@@ -89,6 +89,9 @@
             <li>
               <a class="nav-link scrollto" href="home">Home</a>
             </li>
+            <li>
+              <a class="nav-link scrollto" href="system_tester_tg_il">System Tester</a>
+            </li>
           </ul>
           <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
@@ -105,49 +108,27 @@
     <form method="POST" action="/tag_il">
       <div class="container-fluid bg-light">
         <div class="translator_container">
-          <div
-            class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3"
-          >
+          <div class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3">
             <div class="card-header text-white" id="card-header">
               <center><h1>TAGALOG</h1></center>
             </div>
 
             <div class="card-body">
-              <textarea
-                rows="20"
-                class="form-control"
-                id="id--system-input"
-                name="source_lang"
-                
-              >
-{{source}}</textarea
-              >
+              <textarea rows="20" class="form-control" id="id--system-input" name="source_lang">{{source}}</textarea>
             </div>
           </div>
 
           <div class="d-flex justify-content-center justify-content-lg-start">
-            <a href="il_tag" class="btn-get-started scrollto mt-4"
-              ><i class="bi bi-arrow-left-right"></i
-            ></a>
+            <a href="il_tag" class="btn-get-started scrollto mt-4"><i class="bi bi-arrow-left-right"></i></a>
           </div>
-
-          <div
-            class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3"
-          >
+            
+          <div class="card bg-light border border-2 border-secondary col-4 rounded mt-3 mb-3">
             <div class="card-header text-white" id="card-header">
               <center><h1>ILOKANO</h1></center>
             </div>
 
             <div class="card-body">
-              <textarea
-                rows="20"
-                class="form-control"
-                id="id--system-output"
-                name="system-output"
-                readonly="true"
-              >
- {% for op_sen in op_sen_list %}{{op_sen + "\n"}}{% endfor %}</textarea
-              >
+                <textarea rows="20" class="form-control" id="id--system-output" name="system-output" readonly="true">{% for op_sen in op_sen_list %}{{op_sen + "\n"}}{% endfor %}</textarea>
             </div>
           </div>
         </div>
