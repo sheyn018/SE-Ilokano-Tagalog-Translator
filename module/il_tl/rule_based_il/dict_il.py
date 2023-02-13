@@ -15,8 +15,6 @@ f_phrases = pd.read_csv('src/csv data/f_phrases.csv')
 """"
 Tagalog to Ilokano Dictionaries
 """
-
-# Single Words Dictionary
 dict_sw = pd.read_json('src/json data/Ilokano to Tagalog/Example-Based/dict_il_sw.json')
 dict_vb = pd.read_json('src/json data/Ilokano to Tagalog/Example-Based/dict_il_vb.json')
 dict_nn = pd.read_json('src/json data/Ilokano to Tagalog/Example-Based/dict_il_nn.json')
@@ -74,7 +72,6 @@ rb_il_tf_idf_list = dict_rb['Ilokano Adverb TF-IDF'].tolist()
 cc_il_tf_idf_list = dict_cc['Ilokano Conjunction TF-IDF'].tolist()
 pr_il_tf_idf_list = dict_pr['Ilokano Preposition TF-IDF'].tolist()
 dt_il_tf_idf_list = dict_dt['Ilokano Determiner TF-IDF'].tolist()
-
 
 """
 Tagalog to Ilokano Language Model Dictionary

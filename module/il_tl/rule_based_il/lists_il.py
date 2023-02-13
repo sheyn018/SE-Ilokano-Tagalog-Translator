@@ -1,5 +1,3 @@
-from module.il_tl.rule_based_il import dict_il
-
 """
 Determiner Lists
 """
@@ -34,28 +32,28 @@ Affixes
 """
 
 PREFIX_SET = [
-'na', 'ag', 'ka', 'ca', 'nag', 'im', 'maipa',
-'maki', 'panna', 'maka', 'naki', 'naka', 'nang', 
-'makapag','mang', 'agan', 'agay', 'pananga', 'agam', 
-'nagpa', 'magpa', 'ipa', 'pag', 'pam', 'taga', 'i', 
-'napa', 'in', 'manang','ma', 'para', 'pang', 'panag', 
-'nai', 'manag', 'man', 'kina', 'nai', 'nai', 'nagpa', 'mapag'
+    'na', 'ag', 'ka', 'ca', 'nag', 'im', 'maipa',
+    'maki', 'panna', 'maka', 'naki', 'naka', 'nang', 
+    'makapag','mang', 'agan', 'agay', 'pananga', 'agam', 
+    'nagpa', 'magpa', 'ipa', 'pag', 'pam', 'taga', 'i', 
+    'napa', 'in', 'manang','ma', 'para', 'pang', 'panag', 
+    'nai', 'manag', 'man', 'kina', 'nai', 'nai', 'nagpa', 'mapag'
 ]
 
 ADJ_PREFIX =[
-'ka', 'na'
+    'ka', 'na'
 ]
 
 INFIX_SET = ['in']
 
 SUFFIX_SET = [
-'to', 'nto', 'ak' 'en'
-'na', 'an', 'm', 'nyo', 
-'cayo', 'tayo', 'anda',
+    'to', 'nto', 'ak', 'en'
+    'na', 'an', 'm', 'nyo', 
+    'cayo', 'tayo', 'anda',
 ]
 
 ADJ_SUFFIX = [
-'an'
+    'an'
 ]
 
 PREPO_SET = [

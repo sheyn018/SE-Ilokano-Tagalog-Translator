@@ -1,29 +1,38 @@
-from module.tl_il.rule_based_tl import dict_tl, remove_punct, tokenize, tag
+from module.tl_il.rule_based_tl import dict_tl, tokenize, tag
 from module.il_tl.rule_based_il import dict_il
-from module.tl_il.doc_trans_tl import combine_tokens
+from module.functions.global_funcs import combine_tokens, remove_punct
 from module.smt import encapsulate, ngram_var
 import pandas as pd
 
-
 def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_in_jj, not_in_rb, not_in_cc, not_in_pr, not_in_dt, not_tagged, sum_tf_idf_tl_list, vb_tl_tf_idf_list, nn_tl_tf_idf_list, jj_tl_tf_idf_list, rb_tl_tf_idf_list, cc_tl_tf_idf_list, pr_tl_tf_idf_list, dt_tl_tf_idf_list):
-    sp_index = 0 # sentence POS index
+    """
+    This function computes for the lexial probabilities of a sentence
+    
+    Parameters:
+        sen_poss_list (list): A list of parts of speech (POS) for each word in the sentence.
+        dict_source (dict): An object that contains information about words and their corresponding POS in both the source language (Tagalog) and the target language (Ilokano).
+        not_in_'' (list): Lists of words in the sentence that are not found in the corresponding lists of words in the target language (Ilokano).
+        not_tagged: A list of words in the sentence that are not tagged with a POS.
+        sum_tf_idf_tl_list, ''_tl_tf_idf_list (list): Lists of values that represent the lexical probabilities of the corresponding word lists in the target language (Ilokano).
+    
+    Returns:
+        (list): Returns the sum_tf_idf_tl_list which represents the lexical probabilities for the sentence.
+    """
+
+    sp_index = 0
     
     for sen_poss in sen_poss_list:
-        # loop for getting the pos structure of every sentence
         """
         sen_poss is a list of POS of a sentence
         eg. ['VB', 'DT', 'NN', 'DT', 'NN']
         """
-        sen_translation = []
         
         sum_tf_idf_tl = 0
-        wp_index = 0 # word POS index
+        wp_index = 0
         
         for word_pos in sen_poss:
             word = dict_source['Tokenized'][sp_index][wp_index]
-            # gets the word in every sentence
             
-            # Matching Conditions    
             # 1. SW
             if word_pos == 'SW':
                 """
@@ -36,7 +45,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.sw_tl_list.index(word)
                     
                 else:
-                    not_in_sw.append(word) # for debugging purposes
+                    not_in_sw.append(word)
                                 
             # 2. SW
             elif word_pos == 'VB':
@@ -50,7 +59,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.vb_tl_list.index(word)
                     sum_tf_idf_tl += vb_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_vb.append(word) # for debugging purposes
+                    not_in_vb.append(word)
             
             # 3. NN
             elif word_pos == 'NN':
@@ -64,7 +73,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.nn_tl_list.index(word)
                     sum_tf_idf_tl += nn_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_nn.append(word) # for debugging purposes
+                    not_in_nn.append(word)
             
             # 4. JJ
             elif word_pos == 'JJ':
@@ -78,7 +87,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.jj_tl_list.index(word)
                     sum_tf_idf_tl += jj_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_jj.append(word) # for debugging purposes
+                    not_in_jj.append(word)
             
             # 5. RB
             elif word_pos == 'RB':
@@ -92,7 +101,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.rb_tl_list.index(word)
                     sum_tf_idf_tl += rb_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_rb.append(word) # for debugging purposes
+                    not_in_rb.append(word)
                     
             # 6. CC
             elif word_pos == 'CC':
@@ -106,7 +115,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.cc_tl_list.index(word)
                     sum_tf_idf_tl += cc_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_cc.append(word) # for debugging purposes
+                    not_in_cc.append(word)
                     
             # 7. PR
             elif word_pos == 'PR':
@@ -120,7 +129,7 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.pr_tl_list.index(word)
                     sum_tf_idf_tl += pr_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_pr.append(word) # for debugging purposes
+                    not_in_pr.append(word)
             
              # 8. DT
             elif word_pos == 'DT':
@@ -134,10 +143,10 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
                     temp_index = dict_tl.dt_tl_list.index(word)
                     sum_tf_idf_tl += dt_tl_tf_idf_list[temp_index]
                 else:
-                    not_in_dt.append(word) # for debugging purposes
+                    not_in_dt.append(word)
             
             else:
-                not_tagged.append(word) # for debugging purposes
+                not_tagged.append(word)
                 
             wp_index += 1
         
@@ -147,8 +156,20 @@ def get_sum_tl(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
     return sum_tf_idf_tl_list
 # end of get_sum_tl
 
+def tl_trans_lm(ngram_data, tl_struct, il_struct, il_struct_count):
+    """
+    This function performs language model based translation of the input sentences.
+    
+    Parameters:
+        ngram_data (list): List of sentences, where each sentence is a list of n-grams
+        tl_struct (list): List of source language (TL) n-grams
+        il_struct (list): List of target language (IL) n-grams corresponding to each tL n-gram in 'tl_struct'
+        il_struct_count (list): List of the frequency counts of each IL n-gram in 'il_struct'
+    
+    Returns:
+        list: List of translated sentences, where each sentence is a list of translated n-grams
+    """
 
-def trans_lm(ngram_data, tl_struct, il_struct, il_struct_count):
     trans_ngram_data = []
     for ngram_sen in ngram_data:
         trans_ngram_sen = []
@@ -162,52 +183,81 @@ def trans_lm(ngram_data, tl_struct, il_struct, il_struct_count):
                 trans_ngram_sen.append(trans_ngram)
             else:
                 trans_ngram_sen.append(ngram)
-                
-            # np_index += 1
         
         trans_ngram_data.append(trans_ngram_sen)
         
     return trans_ngram_data
-# end of function
+# end of tl_trans_lm
 
-
-def inFPhrases(word, word2, word3, word4, word5, tl_phrases):
-    inFPhrases = False
+def in_F_Phrases(word, word2, word3, word4, word5, tl_phrases):
+    """
+    Check if a given set of words form a phrase in the phrase list.
+    
+    Parameters:
+        word (str): The first word to check.
+        word2 (str): The second word to check.
+        word3 (str): The third word to check.
+        word4 (str): The fourth word to check.
+        tl_phrases (list): List of phrases in Tagalog.
+    
+    Returns:
+        tuple: A tuple containing three values:
+            - inFPhrases (bool): Indicates if the words form a phrase.
+            - tl_phrase (list): The phrase formed by the words, if any.
+            - w_used (int): The number of words used to form the phrase.
+    """
+    in_F_Phrases = False
     tl_phrase = []
     w_used = 0
+
     for phrase in tl_phrases:
         length = len(phrase)
         if length == 1:
             if word == phrase[0]:
-                inFPhrases = True
+                in_F_Phrases = True
                 tl_phrase = phrase
                 w_used = 1
         if length == 2:
             if word == phrase[0] and word2 == phrase[1]:
-                inFPhrases = True
+                in_F_Phrases = True
                 tl_phrase = phrase
                 w_used = 2
         if length == 3:
             if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2]:
-                inFPhrases = True
+                in_F_Phrases = True
                 tl_phrase = phrase
                 w_used = 3
         if length == 4:
             if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3]:
-                inFPhrases = True
+                in_F_Phrases = True
                 tl_phrase = phrase
                 w_used = 4
         if length == 5:
             if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4]:
-                inFPhrases = True
+                in_F_Phrases = True
                 tl_phrase = phrase
                 w_used = 5
                 
-    return inFPhrases, tl_phrase, w_used
-# end of function
+    return in_F_Phrases, tl_phrase, w_used
+# end of in_F_Phrases
 
 
-def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_list, jj_tl_tf_idf_list, rb_tl_tf_idf_list, cc_tl_tf_idf_list, pr_tl_tf_idf_list, dt_tl_tf_idf_list, tl_struct, il_struct, il_struct_count):
+def tl_translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_list, jj_tl_tf_idf_list, rb_tl_tf_idf_list, cc_tl_tf_idf_list, pr_tl_tf_idf_list, dt_tl_tf_idf_list, tl_struct, il_struct, il_struct_count):
+    """
+    This function translates sentences from the source language (tl) to the target language (il) based on the part-of-speech information and the dictionaries of words and their translations.
+    
+    Parameters:
+        sen_poss_list (list): List of lists of words and their corresponding part-of-speech information.
+        dict_source (dict): Dictionary of words in the source language and their corresponding words in the target language.
+        ''_tl_tf_idf_list (list): List of tf-idf scores of pos in the source language.
+        tl_struct (list): List of structures of sentences in the source language.
+        il_struct (list): List of structures of sentences in the target language.
+        il_struct_count (int): Count of structures of sentences in the target language.
+
+    Returns:
+        sen_translation_list (list): List of sentences translated from the source language to the target language.
+    """
+
     il_phrases = [remove_punct(word) for word in dict_il.il_phrases]
     il_phrases = [tokenize(word) for word in il_phrases]
 
@@ -231,13 +281,12 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
     
     ngram_data = ngram_var.ngram_list
     
-    trans_ngram_data = trans_lm(ngram_data, tl_struct, il_struct, il_struct_count)
+    trans_ngram_data = tl_trans_lm(ngram_data, tl_struct, il_struct, il_struct_count)
     
-    sp_index = 0 # sentence POS index
+    sp_index = 0
     sen_translation_list = []
     
     for sen_poss in sen_poss_list:
-        # loop for getting the pos structure of every sentence
         """
         sen_poss is a list of POS of a sentence
         eg. ['VB', 'DT', 'NN', 'DT', 'NN']
@@ -249,7 +298,6 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
         for word_pos in sen_poss:
             if wp_index == cur_wp_index:
                 word = dict_source['Tokenized'][sp_index][wp_index]
-                # gets the word in every sentence
                 
                 try: 
                     word2 = dict_source['Tokenized'][sp_index][wp_index+1]
@@ -268,7 +316,7 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
                 except:
                     word5 = None                    
                     
-                ans = inFPhrases(word, word2, word3, word4, word5, tl_phrases)
+                ans = in_F_Phrases(word, word2, word3, word4, word5, tl_phrases)
                 inFPDict = ans[0]
                 tl_phrase = ans[1]
                 w_used = ans[2]                
@@ -285,8 +333,7 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
                     
                 else:
                     cur_wp_index = wp_index + 1
-                
-                    # Matching Conditions    
+
                     # 1. SW
                     if word_pos == 'SW':
                         """
@@ -456,19 +503,45 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
         sen_translation_list.append(sen_translation)
     
     return sen_translation_list
-# end of function
+# end of tl_translate_smt
 
-def smt_trans(source):
+def tl_smt_trans(source):
+    """
+    This function takes in a source text in Tagalog language and returns a dataframe with the system output and expected output along with their scores.
+    
+    Parameters:
+        source (str): The input text in Tagalog language.
+    
+    Returns:
+        dict_tl_op_ex (DataFrame): A dataframe with two columns - 'System Output' and 'Expected Output' - which contain the system and expected outputs, respectively.
+    """
+    
+    # Splitting the source text into sentences
     parsed_source = source.split("\r\n")
-    cleaned_source = [remove_punct(word) for word in parsed_source]
-    toklenized_source = [tokenize(word) for word in cleaned_source]
-    dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
-    pos_sen_list = tag(dict_source['Tokenized'])
-    dict_source['POS'] = pos_sen_list
-    sen_translation_list = translate_smt(dict_source['POS'], dict_source, dict_tl.vb_tl_tf_idf_list, dict_tl.nn_tl_tf_idf_list, dict_tl.jj_tl_tf_idf_list, dict_tl.rb_tl_tf_idf_list, dict_tl.cc_tl_tf_idf_list, dict_tl.pr_tl_tf_idf_list, dict_tl.dt_tl_tf_idf_list, dict_tl.tl_struct, dict_tl.il_struct, dict_tl.il_struct_count)
-    temp_sen_list = combine_tokens(sen_translation_list)
-    # Dictionary of the system output and the expected output and their scores
-    dict_op_ex = pd.DataFrame({'System Output': temp_sen_list})
 
-    return dict_op_ex
-# end of function
+    # Removing punctuation from the sentences
+    cleaned_source = [remove_punct(word) for word in parsed_source]
+    
+    # Tokenizing the sentences
+    toklenized_source = [tokenize(word) for word in cleaned_source]
+
+    # Creating a dataframe to store the tokenized sentences
+    dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
+    
+    # Tagging the parts of speech for each word in the sentences
+    pos_sen_list = tag(dict_source['Tokenized'])
+
+    # Adding the POS tagged sentences to the dataframe
+    dict_source['POS'] = pos_sen_list
+
+    # Translating the sentences using the SMT method
+    sen_translation_list = tl_translate_smt(dict_source['POS'], dict_source, dict_tl.vb_tl_tf_idf_list, dict_tl.nn_tl_tf_idf_list, dict_tl.jj_tl_tf_idf_list, dict_tl.rb_tl_tf_idf_list, dict_tl.cc_tl_tf_idf_list, dict_tl.pr_tl_tf_idf_list, dict_tl.dt_tl_tf_idf_list, dict_tl.tl_struct, dict_tl.il_struct, dict_tl.il_struct_count)
+    
+    # Combining the translated words to form complete sentences
+    temp_sen_list = combine_tokens(sen_translation_list)
+
+    # Creating a dataframe to store the system output and expected output along with their scores
+    dict_tl_op_ex = pd.DataFrame({'System Output': temp_sen_list})
+
+    return dict_tl_op_ex
+# end of smt_trans

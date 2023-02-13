@@ -1,6 +1,6 @@
-from module.il_tl.rule_based_il import dict_il, remove_punct, tokenize, tag
+from module.il_tl.rule_based_il import dict_il, tokenize, tag
 from module.tl_il.rule_based_tl import dict_tl
-from module.tl_il.doc_trans_tl import combine_tokens
+from module.functions.global_funcs import combine_tokens, remove_punct
 from module.smt import encapsulate, ngram_var
 import pandas as pd
 
@@ -10,7 +10,7 @@ def get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
     
     Parameters:
         sen_poss_list (list): A list of parts of speech (POS) for each word in the sentence.
-        dict_source (dict): An object that contains information about words and their corresponding POS in both the source language (International Sign) and the target language (Tagalog).
+        dict_source (dict): An object that contains information about words and their corresponding POS in both the source language (Ilokano) and the target language (Tagalog).
         not_in_'' (list): Lists of words in the sentence that are not found in the corresponding lists of words in the target language (Tagalog).
         not_tagged: A list of words in the sentence that are not tagged with a POS.
         sum_tf_idf_il_list, ''_il_tf_idf_list (list): Lists of values that represent the lexical probabilities of the corresponding word lists in the target language (Tagalog).
@@ -18,6 +18,7 @@ def get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
     Returns:
         (list): Returns the sum_tf_idf_il_list which represents the lexical probabilities for the sentence.
     """
+
     sp_index = 0
     
     for sen_poss in sen_poss_list:
@@ -138,6 +139,7 @@ def il_trans_lm(ngram_data, il_struct, tl_struct, tl_struct_count):
     Returns:
         list: List of translated sentences, where each sentence is a list of translated n-grams
     """
+    
     trans_ngram_data = []
     for ngram_sen in ngram_data:
         trans_ngram_sen = []
@@ -174,6 +176,7 @@ def in_F_Phrases(word, word2, word3, word4, il_phrases):
             - il_phrase (list): The phrase formed by the words, if any.
             - w_used (int): The number of words used to form the phrase.
     """
+
     in_F_Phrases = False
     il_phrase = []
     w_used = 0
@@ -218,7 +221,6 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
 
     Returns:
         sen_translation_list (list): List of sentences translated from the source language to the target language.
-
     """
 
     il_phrases = [remove_punct(word) for word in dict_il.il_phrases]

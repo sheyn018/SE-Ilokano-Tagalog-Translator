@@ -1,22 +1,5 @@
-import pandas as pd
-import string
 import re
-from module.il_tl.rule_based_il import dict_il, lists_il
-
-def remove_punct(pText):
-    """
-    Remove all punctuation characters from a text string.
-
-    Parameters:
-        text (str): The input text string.
-
-    Returns:
-        str: The text string with all punctuation characters removed.
-    """
-    return "".join(char for char in pText if char not in string.punctuation)
-# end of remove_punct
-
-import re
+from module.il_tl.rule_based_il import lists_il
 
 def tokenize(text):
     """
@@ -108,8 +91,6 @@ def isVerb(word, prev_word, prev2_word, next_word, hasVerbAffixes, PREPO_SET, PE
             """
             if the word is 'espiritu' then it is not a verb
             eg. 'Esperitu' = 'spirit' (ti espiritu ti Dios)
-            issue: there might be more words that vae a previous word ti and next word ti that is not a verb
-            maybe noun database will solve this issue
             """
             isVerb = False
             isDone = True
@@ -489,24 +470,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
     return isAdj
 # end of isAdj
 
-
-"""
-Palindrome Checker Function
-"""
-def isPalindrome(word): 
-    """
-    This function checks if the word is a palindrome.
-    """
-    
-    half_len = len(word)/2
-    half_len = int(half_len)
-    
-    if word[:half_len] == word[half_len:] and half_len > 2:
-        return True
-    else:
-        return False
-# end of isPalindrome
-
 """
 Adverb Checker Function
 """
@@ -716,4 +679,3 @@ def tag(sentence_list):
         
     return pos_sen_list
 # end of tag
-
