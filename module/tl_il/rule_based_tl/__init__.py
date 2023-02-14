@@ -3,13 +3,13 @@ import re
 from module.tl_il.rule_based_tl import dict_tl, lists_tl
 from module.functions.global_funcs import isPalindrome
 
-def tokenize(text):
+def tok_tar(text):
     """
     This function takes in a string of text and returns a list of lowercase tokens split by non-word characters.
     Any empty tokens (resulting from multiple consecutive non-word characters) are removed.
 
     Parameters:
-        text (str): The input string to tokenize.
+        text (str): The input string to tok_tar.
 
     Returns:
         list: A list of lowercase tokens.
@@ -18,7 +18,7 @@ def tokenize(text):
     tokens = re.split('\W+', text.lower())
     tokens = [token for token in tokens if token != '']
     return tokens
-# end of tokenize
+# end of tok_tar
 
 """
 Determiner Checker Function
@@ -680,7 +680,7 @@ def isConj(word, CONJ_SET):
         return False
 # end of isConj
 
-def tag(sentence_list):
+def pos_tar(sentence_list):
     isTagged = None
     hasVerbAffixes = None
     pos_sen_list = []
@@ -760,4 +760,4 @@ def tag(sentence_list):
         pos_sen_list.append(pos_list)
         
     return pos_sen_list
-# end of tag
+# end of pos_tar

@@ -1,7 +1,7 @@
 import re
 from module.il_tl.rule_based_il import lists_il
 
-def tokenize(text):
+def tok_src(text):
     """
     This function takes in a text string as input and returns a list of tokens (words) extracted from the input text.
 
@@ -27,7 +27,7 @@ def tokenize(text):
         i += 1
     
     return tokens
-# end of tokenize
+# end of tok_src
 
 """
 Determiner Checker Function
@@ -591,7 +591,7 @@ def isConj(word, CONJ_SET):
         return False
 # end of isConj
 
-def tag(sentence_list):
+def pos_src(sentence_list):
     """
     This function takes a list of sentences and returns a list of tagged parts of speech for each word in the sentence.
 
@@ -678,4 +678,4 @@ def tag(sentence_list):
         pos_sen_list.append(pos_list)
         
     return pos_sen_list
-# end of tag
+# end of pos_src

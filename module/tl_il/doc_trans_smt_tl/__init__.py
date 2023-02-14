@@ -1,4 +1,4 @@
-from module.tl_il.rule_based_tl import dict_tl, tokenize, tag
+from module.tl_il.rule_based_tl import dict_tl, tok_tar, pos_tar
 from module.il_tl.rule_based_il import dict_il
 from module.functions.global_funcs import combine_tokens, remove_punct
 from module.smt import encapsulate, ngram_var
@@ -259,10 +259,10 @@ def tl_translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf
     """
 
     il_phrases = [remove_punct(word) for word in dict_il.il_phrases]
-    il_phrases = [tokenize(word) for word in il_phrases]
+    il_phrases = [tok_tar(word) for word in il_phrases]
 
     tl_phrases = [remove_punct(word) for word in dict_tl.tl_phrases]
-    tl_phrases = [tokenize(word) for word in tl_phrases]
+    tl_phrases = [tok_tar(word) for word in tl_phrases]
     
     not_in_sw = []
     not_in_vb = []
@@ -523,13 +523,13 @@ def tl_smt_trans(source):
     cleaned_source = [remove_punct(word) for word in parsed_source]
     
     # Tokenizing the sentences
-    toklenized_source = [tokenize(word) for word in cleaned_source]
+    toklenized_source = [tok_tar(word) for word in cleaned_source]
 
     # Creating a dataframe to store the tokenized sentences
     dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
     
     # Tagging the parts of speech for each word in the sentences
-    pos_sen_list = tag(dict_source['Tokenized'])
+    pos_sen_list = pos_tar(dict_source['Tokenized'])
 
     # Adding the POS tagged sentences to the dataframe
     dict_source['POS'] = pos_sen_list

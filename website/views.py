@@ -7,7 +7,7 @@ import pandas as pd
 
 views = Blueprint('views', __name__)
 
-@views.route('/home', methods=['GET', 'POST'])
+@views.route('/', methods=['GET', 'POST'])
 def home():
     """
     Route for the home page of the application
@@ -57,3 +57,10 @@ def system_tester_il_tg():
     Route for the page that handles the system tester for Ilokano to Tagalog machine translation
     """
     return render_template('system_tester_il-tg.html')
+
+@views.route('/home', methods=['GET', 'POST'])
+def landing_page():
+    """
+    Route for the home page of the application
+    """
+    return render_template("index.html")
