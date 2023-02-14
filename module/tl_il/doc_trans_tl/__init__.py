@@ -1,4 +1,4 @@
-from module.tl_il.rule_based_tl import dict_tl, remove_punct, tokenize, tag
+from module.tl_il.rule_based_tl import dict_tl, remove_punct, tok_tar, pos_tar
 import pandas as pd
 
 
@@ -194,9 +194,9 @@ def translate(sen_poss_list, dict_source):
 def doc_trans(source, expected_op):
     parsed_source = source.split("\r\n")
     cleaned_source = [remove_punct(word) for word in parsed_source]
-    toklenized_source = [tokenize(word) for word in cleaned_source]
+    toklenized_source = [tok_tar(word) for word in cleaned_source]
     dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
-    pos_sen_list = tag(dict_source['Tokenized'])
+    pos_sen_list = pos_tar(dict_source['Tokenized'])
     
     dict_source['POS'] = pos_sen_list
     sen_translation_list = translate(dict_source['POS'], dict_source)
@@ -207,7 +207,7 @@ def doc_trans(source, expected_op):
     
     parsed_expected_op = expected_op.split("\r\n")
     cleaned_expected_op = [remove_punct(word) for word in parsed_expected_op]
-    toklenized_expected_op = [tokenize(word) for word in cleaned_expected_op]
+    toklenized_expected_op = [tok_tar(word) for word in cleaned_expected_op]
     combine_tokens_expected_op = combine_tokens(toklenized_expected_op)
     dict_op_ex['Target Output'] = combine_tokens_expected_op
     

@@ -1,4 +1,4 @@
-from module.tl_il.rule_based_tl import dict_tl, remove_punct, tokenize, tag
+from module.tl_il.rule_based_tl import dict_tl, remove_punct, tok_tar, pos_tar
 from module.il_tl.rule_based_il import dict_il
 from module.tl_il.doc_trans_tl import combine_tokens
 from module.smt import encapsulate, ngram_var
@@ -199,10 +199,10 @@ def inFPhrases(word, word2, word3, tl_phrases):
 
 def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_list, jj_tl_tf_idf_list, rb_tl_tf_idf_list, cc_tl_tf_idf_list, pr_tl_tf_idf_list, dt_tl_tf_idf_list, tl_struct, il_struct, il_struct_count):
     il_phrases = [remove_punct(word) for word in dict_il.il_phrases]
-    il_phrases = [tokenize(word) for word in il_phrases]
+    il_phrases = [tok_tar(word) for word in il_phrases]
 
     tl_phrases = [remove_punct(word) for word in dict_tl.tl_phrases]
-    tl_phrases = [tokenize(word) for word in tl_phrases]
+    tl_phrases = [tok_tar(word) for word in tl_phrases]
     
     not_in_sw = []
     not_in_vb = []
@@ -443,9 +443,9 @@ def translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf_li
 def smt_trans(source):
     parsed_source = source.split("\r\n")
     cleaned_source = [remove_punct(word) for word in parsed_source]
-    toklenized_source = [tokenize(word) for word in cleaned_source]
+    toklenized_source = [tok_tar(word) for word in cleaned_source]
     dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
-    pos_sen_list = tag(dict_source['Tokenized'])
+    pos_sen_list = pos_tar(dict_source['Tokenized'])
     dict_source['POS'] = pos_sen_list
     sen_translation_list = translate_smt(dict_source['POS'], dict_source, dict_tl.vb_tl_tf_idf_list, dict_tl.nn_tl_tf_idf_list, dict_tl.jj_tl_tf_idf_list, dict_tl.rb_tl_tf_idf_list, dict_tl.cc_tl_tf_idf_list, dict_tl.pr_tl_tf_idf_list, dict_tl.dt_tl_tf_idf_list, dict_tl.tl_struct, dict_tl.il_struct, dict_tl.il_struct_count)
     temp_sen_list = combine_tokens(sen_translation_list)

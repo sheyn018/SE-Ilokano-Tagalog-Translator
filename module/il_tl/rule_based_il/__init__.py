@@ -10,7 +10,7 @@ def remove_punct(pText):
 # end of function
 
 
-def tokenize(text):
+def tok_src(text):
     tokens = re.split('\W+', text.lower())
     
     for token in tokens:
@@ -672,7 +672,7 @@ def isConj(word, CONJ_SET):
 # end of function
 
 
-def tag(sentence_list):
+def pos_src(sentence_list):
     isTagged = None
     hasVerbAffixes = None
     pos_sen_list = []
