@@ -1,9 +1,7 @@
-from module.tl_il.rule_based_tl import dict_tl
-
 """
 Determiner Lists
 """
-noun_dtmn_list = ["ang", "ng", "mga", "si", "ay", "ni", "sa", "y"] # Noun Determiners
+noun_dtmn_list = ["ang", "ng", "mga", "si", "ay", "ni", "sa", "y"]
 
 adv_dtmn_list = ["nang"]
 
@@ -29,43 +27,23 @@ adj_size_list = ['mahaba', 'malalim', 'makitid', 'maliit', 'matangkad', 'makapal
 
 adj_color_list = ['itim', 'asul', 'kayumanggi', 'kulay-abo', 'berde', 'kahel', 'lila', 'pula','puti', 'dilaw']
 
-
-
 """ 
-    Affixes
+Affixes
 """
+
 PREFIX_SET = [
-    'nakikipag', 'pakikipag',
-    'pinakama', 'pagpapa',
-    'pinagka', 'panganga',
-    'makapag', 'nakapag',
-    'tagapag', 'makipag',
-    'nakipag', 'tigapag',
-    'pakiki', 'magpa',
-    'napaka', 'pinaka',
-    'ipinag', 'pagka',
-    'pinag', 'mapag',
-    'mapa', 'taga',
-    'ipag', 'tiga',
-    'pala', 'pina',
-    'pang', 'naka',
-    'nang', 'mang',
-    'sing', 'ma', # 'ma' is a prefix in Tagalog for Adjectives, Adverbs, and Verbs
-    'ipa', 'pam',
-    'pan', 'pag',
-    'tag', 'mai',
-    'mag', 'nam',
-    'nag', 'man',
-    'may', 
-    'na', 'ni',
-    'pa', 'ka',
-    'um', 'in',
-    'i', 'nagpa', 
-    'magka', 'nagka',
-    'ini'    
+    'nakikipag', 'pakikipag', 'pinakama', 'pagpapa', 'pinagka', 'panganga',
+    'makapag', 'nakapag', 'tagapag', 'makipag', 'nakipag', 'tigapag',
+    'pakiki', 'magpa', 'napaka', 'pinaka', 'ipinag', 'pagka',
+    'pinag', 'mapag', 'mapa', 'taga', 'ipag', 'tiga',
+    'pala', 'pina', 'pang', 'naka', 'nang', 'mang',
+    'sing', 'ma', 'ipa', 'pam', 'pan', 'pag', 
+    'tag', 'mai', 'mag', 'nam', 'nag', 'man',
+    'may', 'na', 'ni', 'pa', 'ka', 'um', 'in',
+    'i', 'nagpa', 'magka', 'nagka', 'ini'    
 ]
 
-Adj_Prefix = [
+ADJ_PREFIX = [
     'ma'
 ]
 
@@ -74,40 +52,24 @@ INFIX_SET = [
 ]
 
 SUFFIX_SET = [
-    'syon','dor',
-    'ita', 'han',
-    'hin', 'ing',
-    'ang', 'ng',
-    'an', 'in',
-    'g',
+    'syon','dor', 'ita', 'han',
+    'hin', 'ing', 'ang', 'ng',
+    'an', 'in', 'g',
 ]
 
 PREPO_SET = [
-    'gitna',            #removed "sumasa", transferred to prepo_dtmn_list since it is often placed before prepositions
-    'ibabaw', 'ilalim',
-    'itaas', 'ibaba', 
-    'baba', 'taas',
-    'harap', 'likod', 
-    'labas', 'loob',
-    'pagitan', 'unahan', 
-    'dulo', 'tabi', 'yan'
+    'gitna', 'ibabaw', 'ilalim', 'itaas', 'ibaba', 
+    'baba', 'taas', 'harap', 'likod','labas', 'loob',
+    'pagitan', 'unahan', 'dulo', 'tabi', 'yan'
 ]
 
 CONJ_SET = [
-    'at', 'bali', 
-    'dahil', 'datapwat', 
-    'habang', 'kahit', 
-    'kapag', 'kasi', 
-    'kaso', 'kaya', 
-    'kaysa', 'nang',
-    'na', 'ngunit', 
-    'ni',  'o', 
-    'para', 'pati', 
-    'pero', 'porket', 
-    'saka', 'samantala', 
-    'subalit', 'tsaka', 
-    'tuwing', 'upang',
-    'imbes' 
+    'at', 'bali', 'dahil', 'datapwat', 'habang', 
+    'kahit', 'kapag', 'kasi', 'kaso', 'kaya', 
+    'kaysa', 'nang', 'na', 'ngunit', 'ni',  'o', 
+    'para', 'pati', 'pero', 'porket', 'saka', 
+    'samantala', 'subalit', 'tsaka', 'tuwing', 
+    'upang', 'imbes' 
 ]
 
 ADV_SET = [
@@ -127,9 +89,4 @@ PER_PRONOUN = [
     'tayo', 'ka'
 ]
 
-
-
-""" 
-    Other Lists
-"""
-vowels = ['a', 'e', 'i', 'o', 'u']
+VOWELS = ['a', 'e', 'i', 'o', 'u']

@@ -1,50 +1,36 @@
-import pandas as pd
-import string
 import re
-from module.il_tl.rule_based_il import dict_il, lists_il
-
-def remove_punct(pText):
-    text_nopunct = "".join([char for char in pText if char not in string.punctuation])
-    
-    return text_nopunct
-# end of function
-
+from module.il_tl.rule_based_il import lists_il
 
 def tokenize(text):
+    """
+    This function takes in a text string as input and returns a list of tokens (words) extracted from the input text.
+
+    Parameters:
+        text (str): the text to be tokenized
+
+    Returns:
+        list: a list of tokens (words) extracted from the input text
+    """
+    # Convert the text to lowercase and split it into tokens based on non-word characters
     tokens = re.split('\W+', text.lower())
     
-    for token in tokens:
-        
-        try:
-            next_token = tokens[tokens.index(token) + 1]
-        except (ValueError, IndexError):
-            next_token = None
-        """
-        gets the next word in the sentence
-        """
-        
-        try:
-            next2_token = tokens[tokens.index(token) + 2]
-        except (ValueError, IndexError):
-            next2_token = None
-        """
-        gets the next word in the sentence
-        """
-        
-        if token == 'naaramid' and next_token == 'a' and next2_token == 'casta':
-            temp_token = token + " " + next_token + " " + next2_token
-            tokens[tokens.index(token)] = temp_token
-            tokens.remove(next_token)
-            tokens.remove(next2_token)
-            
-        if token == '':
-            tokens.remove(token)
+    # Remove any empty tokens from the list of tokens
+    tokens = [token for token in tokens if token]
+    
+    # Check if the current token, next token, and next next token form the specific string 'naaramid a casta'
+    # If so, merge the three tokens into one
+    i = 0
+    while i < len(tokens) - 2:
+        if tokens[i] == 'naaramid' and tokens[i+1] == 'a' and tokens[i+2] == 'casta':
+            tokens[i] = " ".join([tokens[i], tokens[i+1], tokens[i+2]])
+            del tokens[i+1:i+3]
+        i += 1
+    
     return tokens
-# end of function
-
+# end of tokenize
 
 """
-    Determiner Checker Function
+Determiner Checker Function
 """
 def isDtmn(word, noun_dtmn_list, adv_dtmn_list, prepo_dtmn_list, adv_time_list):
     """
@@ -56,11 +42,11 @@ def isDtmn(word, noun_dtmn_list, adv_dtmn_list, prepo_dtmn_list, adv_time_list):
         ans = False
 
     return ans
-# end of function
+# end of isDtmn
 
 
 """
-    Verb Affixer Checker Function
+Verb Affixer Checker Function
 """
 def check_verb_affixes(word, isTagged, hasVerbAffixes, PREFIX_SET, INFIX_SET, SUFFIX_SET):
     """
@@ -88,11 +74,10 @@ def check_verb_affixes(word, isTagged, hasVerbAffixes, PREFIX_SET, INFIX_SET, SU
             isTagged = True
     
     return hasVerbAffixes
-# end of function
-
+# end of check_verb_affixes
 
 """
-    Verb Checker Function
+Verb Checker Function
 """
 def isVerb(word, prev_word, prev2_word, next_word, hasVerbAffixes, PREPO_SET, PER_PRONOUN, CONJ_SET, noun_dtmn_list, adv_dtmn_list, prepo_dtmn_list):
     """
@@ -106,8 +91,6 @@ def isVerb(word, prev_word, prev2_word, next_word, hasVerbAffixes, PREPO_SET, PE
             """
             if the word is 'espiritu' then it is not a verb
             eg. 'Esperitu' = 'spirit' (ti espiritu ti Dios)
-            issue: there might be more words that vae a previous word ti and next word ti that is not a verb
-            maybe noun database will solve this issue
             """
             isVerb = False
             isDone = True
@@ -268,11 +251,10 @@ def isVerb(word, prev_word, prev2_word, next_word, hasVerbAffixes, PREPO_SET, PE
             isDone = True
     
     return isVerb
-# end of function
-
+# end of isVerb
 
 """
-    Noun Checker Function
+Noun Checker Function
 """
 def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, PREPO_SET, CONJ_SET, PER_PRONOUN, hasVerbAffixes):
     """
@@ -295,7 +277,6 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
             if not word.startswith("maica") and not isDone:
                 """
                 if previous word is a and the word does not start with maica, then it is a noun
-                e.g. aldaw a maicadua -> nattag kasi maicadua pag wala tong condition
                 """
                 isNoun = True
                 isDone = True
@@ -307,7 +288,6 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
             if next2_word.startswith("maica") and next_word == "a" and not isDone:
                 """
                 if next next word starts with maic prefix and next word is a, then it is a noun
-                e.g. aldaw a maicadua -> di nattag aldaw since wala siyang noun_dtmn before aldaw
                 """
                 isNoun = True
                 isDone = True
@@ -316,7 +296,6 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
                 if prev_word in (noun_dtmn_list) and next_word not in ("ti", "nga", "a"):
                     """
                     if the first two letters of a word is repeated and next_word is not ti/nga/a, then it is a noun
-                    e.g. dadackel -> adjective dapat
                     """
                     isNoun = True
                     isDone = True
@@ -325,7 +304,6 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
                     isDone = False
             
             if word[:3] == word[3:6]:
-                # untags adjs such as dacdackel
                 if prev_word in (noun_dtmn_list) and next_word not in (noun_dtmn_list):
                     isNoun = False
 
@@ -359,9 +337,6 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
             isDone = True
 
         if prev_word == word[:2]:
-            """
-            eg.  an-animal
-            """
             isNoun = True
             isDone = True
 
@@ -378,17 +353,13 @@ def isNoun(word, prev_word, prev2_word, next_word, next2_word, noun_dtmn_list, P
             isDone = True
 
         if word in PER_PRONOUN:
-            """
-            if the word is a personal pronoun, then it is a noun
-            """
             isNoun = True
             isDone = True
     return isNoun
-# end of function
-
+# end of isNoun
 
 """
-    Adjective Checker Function
+Adjective Checker Function
 """
 def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list, adv_dtmn_list, prepo_dtmn_list, PREPO_SET, PER_PRONOUN, CONJ_SET):
     """
@@ -402,8 +373,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("na") and (next_word in noun_dtmn_list or next_word == 'a' or prev_word == 'ti') and  not hasVerbAffixes and not isDone:
             """
             if the word is an adjective it has an adjective prefix 'na' and the next word is noun determiner
-            eg. napintas ti balay (maganda ang bahay)
-            eg. naimbag a bigat (magandang umaga)
             """
             isAdj = True
             isDone = True
@@ -411,7 +380,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("na") and word[:3] != 'nag' and prev2_word in noun_dtmn_list and (next_word in noun_dtmn_list or next_word == 'ket') and not isDone:
             """
             if the word is sandwiched between two nouns
-            eg.
             """
             isAdj = True
             isDone = True
@@ -419,7 +387,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("na") and not word.startswith("nag") and (prev_word in ("ti", "nga", "a")) and (word.find("biag") == -1) and not word.endswith('sua') and not isDone:
             """
             if the adjective is at the end
-            eg.
             """
             isAdj = True
             isDone = True 
@@ -427,7 +394,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("ka") and word.endswith("an") and not isDone:
             """
             if the word is an adjective it has an adjective prefix 'ka' and adjective suffix 'an' and its a superlative adjective
-            eg. kadakkelan (pinakamalaki)
             """
             isAdj = True
             isDone = True 
@@ -435,8 +401,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if (word.find("una") != -1) and (next_word == 'a' or next_word == 'nga') and  not hasVerbAffixes and not isDone:
             """
             if the word is an adjective it has a word 'una' and next word is 'a' or 'nga'
-            eg. umuna a bilin (unang bilin)
-            eg. immuna nga arida (unang hari)
             """
             isAdj = True
             isDone = True
@@ -444,7 +408,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word == 'awan' and next_word in noun_dtmn_list and not isDone:
             """
             if the word is an adjective it is awan followed by noun
-            eg. awan (walang)
             """
             isAdj = True
             isDone = True
@@ -460,7 +423,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word == 'maysa' and (next_word == 'a' or next_word == 'nga') and  not hasVerbAffixes and not isDone:
             """
             if the word is an adjective it is maysa followed by nga or a and its an ordinal adjective
-            eg. maysa (unang or isang)
             """
             isAdj = True
             isDone = True 
@@ -468,7 +430,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("maika") or word.startswith("maica"):
             """
             if the word is an adjective it has an adjective prefix 'maika' or 'maica' and its an ordinal adjective
-            eg. maicadua (ikalawang)
             """
             isAdj = True
             isDone = True 
@@ -476,7 +437,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word[:3] == word[3:6] and not word.endswith('aw') and (next_word in noun_dtmn_list or prev_word == 'a') and  not hasVerbAffixes and not isDone:
             """
             if the word is an adjective it repeats the first 3 letters to make it comparative
-            eg. dakdakkel, basbassit
             """
             isAdj = True
             isDone = True 
@@ -489,7 +449,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
             else:
                 """
                 if the word is an adjective it repeats the first 2 letters
-                eg. dadakkel (malalaking), babassit (maliliit)
                 """
                 isAdj = True
                 isDone = True
@@ -497,7 +456,6 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("na") and word[2:5] == word[5:8] and not isDone:
             """
             if the word is an adjective it repeats the next 3 letters after 'na' to make it comparative
-            eg. nalaklaka, napinpintas
             """
             isAdj = True
             isDone = True
@@ -505,38 +463,15 @@ def isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, noun_dtmn_list
         if word.startswith("na") and word[2:6] == word[6:10] and not isDone:
             """
             if the word is an adjective it repeats the next 4 letters after 'na' to make it comparative
-            eg. nasingsingpet
             """
             isAdj = True
             isDone = True
 
     return isAdj
-# end of function
-
-
-"""
-    Palindrome Checker Function
-"""
-def isPalindrome(word): 
-    """
-    This function checks if the word is a palindrome.
-    """
-    
-    """
-    gets the half length of the word
-    """
-    half_len = len(word)/2
-    half_len = int(half_len)
-    
-    if word[:half_len] == word[half_len:] and half_len > 2:
-        return True
-    else:
-        return False
-# end of function
-
+# end of isAdj
 
 """
-    Adverb Checker Function
+Adverb Checker Function
 """
 def isAdv(word, prev_word, next_word, PER_PRONOUN, PREPO_SET, adv_time_list, adv_manner_list, adv_freq_list, adv_place_list, adv_dtmn_list, noun_dtmn_list):
    """
@@ -548,8 +483,7 @@ def isAdv(word, prev_word, next_word, PER_PRONOUN, PREPO_SET, adv_time_list, adv
    if word not in PER_PRONOUN and word not in PREPO_SET:
       if word.startswith('idi') or word.startswith('di') and not prev_word == 'nga' and not isDone:
          """
-         If the word starts with idi and has nga as its next word it is an adverb describing an adjective
-         
+         If the word starts with idi and has nga as its next word it is an adverb describing an adjective 
          """
          isAdv = True
          isDone = True
@@ -597,18 +531,9 @@ def isAdv(word, prev_word, next_word, PER_PRONOUN, PREPO_SET, adv_time_list, adv
          isAdv = True
          isDone = True 
          
-      # if next_word == 'a' and next2_word isAdj and not hasVerbAffixes and not isDone:
-      #     """
-      #     If the next word is a and has no Verb affixes, then the word is an adverb
-      #     eg. tiyak na maganda ang kinabukasan ng mga ... =  sigurado a naraniag ti masakbayan dagidiay...
-      #     """
-      #     isAdv = True
-      #     isDone = True
-         
       if word.startswith('na') and not next_word in noun_dtmn_list and not isDone:
          """
          If the next word is not a noun dtrmr and the word starts with 'a'
-         eg. mabilis na naglalaho = napartak a mapukpukaw
          """
          isAdv = True
          isDone = True
@@ -621,11 +546,10 @@ def isAdv(word, prev_word, next_word, PER_PRONOUN, PREPO_SET, adv_time_list, adv
          isDone = True
                   
    return isAdv
-# end of function
-
+# end of isAdv
 
 """
-    Preposition Checker Function
+Preposition Checker Function
 """
 def isPrepo(word, prev_word, prepo_dtmn_list, PREPO_SET):
     """
@@ -647,15 +571,11 @@ def isPrepo(word, prev_word, prepo_dtmn_list, PREPO_SET):
         isPrepo = True
         isDone = True
     if (word.find("ruar") != -1):
-        """
-        eg. makinruar (dakong labas)
-        """
         isPrepo = True
         isDone = True
 
     return isPrepo
-# end of function
-
+# end of isPrepo
 
 """
     Conjunction Checker Function
@@ -669,139 +589,93 @@ def isConj(word, CONJ_SET):
         return True
     else:
         return False
-# end of function
-
+# end of isConj
 
 def tag(sentence_list):
+    """
+    This function takes a list of sentences and returns a list of tagged parts of speech for each word in the sentence.
+
+    Parameters:
+        sentence_list: a list of sentences where each sentence is a string
+    
+    Returms:
+        pos_sen_list: a list of lists where each list contains tagged parts of speech for each word in a sentence.
+    """
     isTagged = None
     hasVerbAffixes = None
     pos_sen_list = []
-    """
-    instantiations of the variables
-    """
 
     for sentence in sentence_list:
         pos_list = []
         prev_word = ""
         prev2_word = ""
         sen_len = len(sentence)
-        """
-        instantiations of the variables
-        """
         
         for word in sentence:
             
             isTagged = False
             hasVerbAffixes = False
-            """
-            instantiations of the variables
-            """
             
             try:
                 next_word = sentence[sentence.index(word) + 1]
             except (ValueError, IndexError):
                 next_word = ""
-            """
-            gets the next word in the sentence
-            """
             
             try:
                 next2_word = sentence[sentence.index(word) + 2]
             except (ValueError, IndexError):
                 next2_word = ""
-            """
-            gets the next word in the sentence
-            """
                 
             try:
                 hasVerbAffixes = check_verb_affixes(word, isTagged, hasVerbAffixes, lists_il.PREFIX_SET, lists_il.INFIX_SET, lists_il.SUFFIX_SET)
             except (ValueError, IndexError):
                 hasVerbAffixes = False
-            """
-            checks if the word has verb affixes
-            """
             
             if sen_len == 1:
-                """
-                if the sentence is only one word long
-                """
                 pos_list.append('SW')
                 isTagged = True
 
             elif isDtmn(word, lists_il.noun_dtmn_list, lists_il.adv_dtmn_list, lists_il.prepo_dtmn_list, lists_il.adv_time_list) and not isTagged:
-                """
-                checks if the word is a determiner
-                """
                 pos_list.append('DT')
                 isTagged = True
                 
             elif isConj(word, lists_il.CONJ_SET) and not isTagged:
-                """
-                checks if the word is a conjunction and not tagged
-                """
                 pos_list.append('CC')
                 isTagged = True
                 
             elif isVerb(word, prev_word, prev2_word, next_word, hasVerbAffixes, lists_il.PREPO_SET, lists_il.PER_PRONOUN, lists_il.CONJ_SET, lists_il.noun_dtmn_list, lists_il.adv_dtmn_list, lists_il.prepo_dtmn_list) and not isTagged:
-                """
-                checks if the word is a verb and not tagged
-                """
+
                 pos_list.append('VB')
                 isTagged = True
 
             elif isNoun(word, prev_word, prev2_word, next_word, next2_word, lists_il.noun_dtmn_list, lists_il.PREPO_SET, lists_il.CONJ_SET, lists_il.PER_PRONOUN, hasVerbAffixes) and not isTagged:
-                """
-                checks if the word is a noun and not tagged
-                """
                 pos_list.append('NN')
                 isTagged = True
             
             elif isAdj(word, prev_word, prev2_word, next_word, hasVerbAffixes, lists_il.noun_dtmn_list, lists_il.adv_dtmn_list, lists_il.prepo_dtmn_list, lists_il.PREPO_SET, lists_il.PER_PRONOUN, lists_il.CONJ_SET) and not isTagged:
-                """
-                checks if the word is an adjective and not tagged
-                """
                 pos_list.append('JJ')
                 isTagged = True
                
             elif isAdv(word, prev_word, next_word, lists_il.PER_PRONOUN, lists_il.PREPO_SET, lists_il.adv_time_list, lists_il.adv_manner_list, lists_il.adv_freq_list, lists_il.adv_place_list, lists_il.adv_dtmn_list, lists_il.noun_dtmn_list) and not isTagged:
-                """
-                checks if the word is an adverb and not tagged
-                """
                 pos_list.append('RB')
                 isTagged = True
                 
             elif isPrepo(word, prev_word, lists_il.prepo_dtmn_list, lists_il.PREPO_SET) and not isTagged:
-                """
-                checks if the word is a preposition and not tagged
-                """
                 pos_list.append('PR')
                 isTagged = True
                         
             else:
-                """
-                if the word is not tagged, then it is an unknown word
-                """
                 pos_list.append('UNK')
                 isTagged = True
             
             prev_word = word
-            """
-            getting the previous word
-            """
-            
+
             try:
                 prev2_word = sentence[sentence.index(word) - 1]
             except (ValueError, IndexError):
                 prev2_word = None
-            """
-            getting the previous after the previous word
-            """
             
         pos_sen_list.append(pos_list)
-        """
-        storing the words in the list to the list of sentences
-        """
         
     return pos_sen_list
-# end of function
-
+# end of tag
