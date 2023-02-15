@@ -2,8 +2,6 @@ import pandas as pd
 from flask import Blueprint, render_template, request
 from module.tl_il.doc_trans_smt_tl import tl_smt_trans
 from module.il_tl.doc_trans_smt_il import il_smt_trans
-from flask import Blueprint, render_template, request
-import pandas as pd
 
 views = Blueprint('views', __name__)
 
