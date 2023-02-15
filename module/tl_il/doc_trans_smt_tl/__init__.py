@@ -189,7 +189,7 @@ def tl_trans_lm(ngram_data, tl_struct, il_struct, il_struct_count):
     return trans_ngram_data
 # end of tl_trans_lm
 
-def in_F_Phrases(word, word2, word3, word4, word5, tl_phrases):
+def in_F_Phrases(word, word2, word3, word4, word5, word6, word7, tl_phrases):
     """
     Check if a given set of words form a phrase in the phrase list.
     
@@ -198,6 +198,9 @@ def in_F_Phrases(word, word2, word3, word4, word5, tl_phrases):
         word2 (str): The second word to check.
         word3 (str): The third word to check.
         word4 (str): The fourth word to check.
+        word5 (str): The fifth word to check.
+        word6 (str): The sixth word to check.
+        word7 (str): The seventh word to check.
         tl_phrases (list): List of phrases in Tagalog.
     
     Returns:
@@ -206,39 +209,56 @@ def in_F_Phrases(word, word2, word3, word4, word5, tl_phrases):
             - tl_phrase (list): The phrase formed by the words, if any.
             - w_used (int): The number of words used to form the phrase.
     """
-    in_F_Phrases = False
+    inFPhrases = False
     tl_phrase = []
     w_used = 0
 
     for phrase in tl_phrases:
         length = len(phrase)
-        if length == 1:
-            if word == phrase[0]:
-                in_F_Phrases = True
+        if length == 7:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4] and word6 == phrase[5] and word7 == phrase[6]:
+                inFPhrases = True
                 tl_phrase = phrase
-                w_used = 1
-        if length == 2:
-            if word == phrase[0] and word2 == phrase[1]:
-                in_F_Phrases = True
+                w_used = 7
+                break
+        if length == 6:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4] and word6 == phrase[5]:
+                inFPhrases = True
                 tl_phrase = phrase
-                w_used = 2
-        if length == 3:
-            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2]:
-                in_F_Phrases = True
-                tl_phrase = phrase
-                w_used = 3
-        if length == 4:
-            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3]:
-                in_F_Phrases = True
-                tl_phrase = phrase
-                w_used = 4
+                w_used = 6
+                break
         if length == 5:
             if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4]:
-                in_F_Phrases = True
+                inFPhrases = True
                 tl_phrase = phrase
                 w_used = 5
+                break
+        if length == 4:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3]:
+                inFPhrases = True
+                tl_phrase = phrase
+                w_used = 4
+                break
+        if length == 3:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2]:
+                inFPhrases = True
+                tl_phrase = phrase
+                w_used = 3
+                break
+        if length == 2:
+            if word == phrase[0] and word2 == phrase[1]:
+                inFPhrases = True
+                tl_phrase = phrase
+                w_used = 2
+                break
+        if length == 1:
+            if word == phrase[0]:
+                inFPhrases = True
+                tl_phrase = phrase
+                w_used = 1
+                break 
                 
-    return in_F_Phrases, tl_phrase, w_used
+    return inFPhrases, tl_phrase, w_used
 # end of in_F_Phrases
 
 
@@ -308,15 +328,23 @@ def tl_translate_smt(sen_poss_list, dict_source, vb_tl_tf_idf_list, nn_tl_tf_idf
                 except:
                     word3 = None
                 try:
-                    word4 = dict_source['Tokenized'][sp_index][wp_index+4]
+                    word4 = dict_source['Tokenized'][sp_index][wp_index+3]
                 except:
                     word4 = None
                 try:
                     word5 = dict_source['Tokenized'][sp_index][wp_index+4]
                 except:
-                    word5 = None                    
+                    word5 = None
+                try:
+                    word6 = dict_source['Tokenized'][sp_index][wp_index+5]
+                except:
+                    word6 = None
+                try:
+                    word7 = dict_source['Tokenized'][sp_index][wp_index+6]
+                except:
+                    word7 = None
                     
-                ans = in_F_Phrases(word, word2, word3, word4, word5, tl_phrases)
+                ans = in_F_Phrases(word, word2, word3, word4, word5, word6, word7,tl_phrases)
                 inFPDict = ans[0]
                 tl_phrase = ans[1]
                 w_used = ans[2]                
