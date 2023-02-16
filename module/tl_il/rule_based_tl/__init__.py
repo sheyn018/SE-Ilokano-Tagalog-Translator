@@ -3,7 +3,7 @@ import re
 from module.tl_il.rule_based_tl import dict_tl, lists_tl
 from module.functions.global_funcs import isPalindrome
 
-def tok_tar(text):
+def tokenized(text):
     """
     This function takes in a string of text and returns a list of lowercase tokens split by non-word characters.
     Any empty tokens (resulting from multiple consecutive non-word characters) are removed.
@@ -680,7 +680,7 @@ def isConj(word, CONJ_SET):
         return False
 # end of isConj
 
-def pos_tar(sentence_list):
+def pos(sentence_list):
     isTagged = None
     hasVerbAffixes = None
     pos_sen_list = []

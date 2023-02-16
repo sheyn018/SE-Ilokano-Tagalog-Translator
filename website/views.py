@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request
 from module.tl_il.doc_trans_smt_tl import tl_smt_trans
 from module.il_tl.doc_trans_smt_il import il_smt_trans
 from module.scoring import scoring_bleu
-from module.scoring import ter
+from module.scoring import scoring_ter
 
 views = Blueprint('views', __name__)
 
@@ -84,7 +84,7 @@ def system_tester_il_tg():
         op_sen_list = dict_il_tl_result['System Output'].tolist()
         dict_il_tl_result['Target Output'] = expected
         ave_bleu = scoring_bleu(dict_il_tl_result)
-        ave_ter = ter(dict_il_tl_result)
+        ave_ter = scoring_ter(dict_il_tl_result)
 
     return render_template('system_tester_il-tg.html', source=source, op_sen_list=op_sen_list, expected=expected, ave_bleu=ave_bleu, ave_ter=ave_ter)
 
