@@ -3,7 +3,7 @@ from nltk.translate.bleu_score import SmoothingFunction, sentence_bleu
 import sacrebleu
 
 
-def bleu(target_op, system_op):
+def bleu_score(target_op, system_op):
     cc = SmoothingFunction() #smoothing is used for short sentences or sentences without 3/4-grams
     return sentence_bleu([target_op], system_op, smoothing_function=cc.method4)#sentenece_blue() requires sentences to be tokenized list
 # end of function
@@ -39,15 +39,15 @@ def scoring_bleu(dict_tl_il_result):
         temp_index += 1
 
     dict_tl_il_result['Blue Score'] = score_list
-    average_bleu_score = total_bleu_score / len(target_op_list)
-    print("Average BLEU Score: ", average_bleu_score)
+    bleu = total_bleu_score / len(target_op_list)
+    print("Average BLEU Score: ", bleu)
     # df.write("Average BLEU Score: " + str(average_bleu_score))
         
-    return average_bleu_score
+    return bleu
 # end of bleu
 
 
-def ter(dict_tl_il_result):
+def scoring_ter(dict_tl_il_result):
     system_op_list = dict_tl_il_result['System Output'].tolist()
     target_op_list = dict_tl_il_result['Target Output'].tolist()
     
@@ -62,6 +62,6 @@ def ter(dict_tl_il_result):
         
         temp_index += 1
     
-    average_ter_score = total_ter_score / len(target_op_list)
-    return average_ter_score
+    ter = total_ter_score / len(target_op_list)
+    return ter
 # end of ter

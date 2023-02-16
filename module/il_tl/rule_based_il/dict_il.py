@@ -80,4 +80,4 @@ il_struct = dict_il_tl_lm['Ilokano Structure'].tolist()
 tl_struct = dict_il_tl_lm['Tagalog Structure'].tolist()
 tl_struct_count = dict_il_tl_lm['Tagalog Structure Count'].tolist()
 
-il_phrases = f_phrases['Ilokano'].to_list()
+lang_src = f_phrases['Ilokano'].to_list()
