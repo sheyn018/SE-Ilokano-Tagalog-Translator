@@ -20,7 +20,7 @@ def scoring_bleu(dict_tl_il_result):
     for target_op in target_op_list:
         system_op = system_op_list[temp_index]
         
-        score = bleu(target_op, system_op)
+        score = bleu_score(target_op, system_op)
         print("Reference: ", target_op)
         print("Machine Translation: ", system_op)
         print("BLEU Score: ", score)
