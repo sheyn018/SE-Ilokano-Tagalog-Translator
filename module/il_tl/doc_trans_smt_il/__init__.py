@@ -1,16 +1,16 @@
-from module.il_tl.rule_based_il import dict_il, tokenize, tag
+from module.il_tl.rule_based_il import dict_il, tokenized, pos
 from module.tl_il.rule_based_tl import dict_tl
 from module.functions.global_funcs import combine_tokens, remove_punct
 from module.smt import encapsulate, ngram_var
 import pandas as pd
 
-def get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_in_jj, not_in_rb, not_in_cc, not_in_pr, not_in_dt, not_tagged, sum_tf_idf_il_list, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list):
+def get_sum_il(sen_poss_list, dict_src, not_in_sw, not_in_vb, not_in_nn, not_in_jj, not_in_rb, not_in_cc, not_in_pr, not_in_dt, not_tagged, sum_tf_idf_il_list, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list):
     """
     This function computes for the lexial probabilities of a sentence
     
     Parameters:
         sen_poss_list (list): A list of parts of speech (POS) for each word in the sentence.
-        dict_source (dict): An object that contains information about words and their corresponding POS in both the source language (Ilokano) and the target language (Tagalog).
+        dict_src (dict): An object that contains information about words and their corresponding POS in both the source language (Ilokano) and the target language (Tagalog).
         not_in_'' (list): Lists of words in the sentence that are not found in the corresponding lists of words in the target language (Tagalog).
         not_tagged: A list of words in the sentence that are not tagged with a POS.
         sum_tf_idf_il_list, ''_il_tf_idf_list (list): Lists of values that represent the lexical probabilities of the corresponding word lists in the target language (Tagalog).
@@ -21,7 +21,7 @@ def get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
 
     sp_index = 0
     
-    for sen_poss in sen_poss_list:
+    for pos_src in sen_poss_list:
         """
         sen_poss is a list of POS of a sentence
         eg. ['VB', 'DT', 'NN', 'DT', 'NN']
@@ -30,8 +30,8 @@ def get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_
         sum_tf_idf_il = 0
         wp_index = 0
         
-        for word_pos in sen_poss:
-            word = dict_source['Tokenized'][sp_index][wp_index]
+        for word_pos in pos_src:
+            word = dict_src['Tokenized'][sp_index][wp_index]
    
             # 1. SW
             if word_pos == 'SW':
@@ -159,7 +159,7 @@ def il_trans_lm(ngram_data, il_struct, tl_struct, tl_struct_count):
     return trans_ngram_data
 # end of il_trans_lm
 
-def in_F_Phrases(word, word2, word3, word4, il_phrases):
+def in_F_Phrases(word, word2, word3, word4, word5, word6, word7, lang_src):
     """
     Check if a given set of words form a phrase in the phrase list.
     
@@ -168,7 +168,10 @@ def in_F_Phrases(word, word2, word3, word4, il_phrases):
         word2 (str): The second word to check.
         word3 (str): The third word to check.
         word4 (str): The fourth word to check.
-        il_phrases (list): List of phrases in Ilokano.
+        word5 (str): The fifth word to check.
+        word6 (str): The sixth word to check.
+        word7 (str): The seventh word to check.
+        lang_src (list): List of phrases in Ilokano.
     
     Returns:
         tuple: A tuple containing three values:
@@ -177,43 +180,65 @@ def in_F_Phrases(word, word2, word3, word4, il_phrases):
             - w_used (int): The number of words used to form the phrase.
     """
 
-    in_F_Phrases = False
+    inFPhrases = False
     il_phrase = []
     w_used = 0
     
-    for phrase in il_phrases:
+    for phrase in lang_src:
         length = len(phrase)
-        if length == 1:
-            if word == phrase[0]:
-                in_F_Phrases = True
+        if length == 7:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4] and word6 == phrase[5] and word7 == phrase[6]:
+                inFPhrases = True
                 il_phrase = phrase
-                w_used = 1
-        elif length == 2:
-            if word == phrase[0] and word2 == phrase[1]:
-                in_F_Phrases = True
+                w_used = 7
+                break        
+        if length == 6:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4] and word6 == phrase[5]:
+                inFPhrases = True
                 il_phrase = phrase
-                w_used = 2
-        elif length == 3:
-            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2]:
-                in_F_Phrases = True
+                w_used = 6
+                break
+        if length == 5:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3] and word5 == phrase[4]:
+                inFPhrases = True
                 il_phrase = phrase
-                w_used = 3
-        elif length == 4:
+                w_used = 5
+                break
+        if length == 4:
             if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2] and word4 == phrase[3]:
-                in_F_Phrases = True
+                inFPhrases = True
                 il_phrase = phrase
                 w_used = 4
+                break
+        if length == 3:
+            if word == phrase[0] and word2 == phrase[1] and word3 == phrase[2]:
+                inFPhrases = True
+                il_phrase = phrase
+                w_used = 3
+                break
+        if length == 2:
+            if word == phrase[0] and word2 == phrase[1]:
+                inFPhrases = True
+                il_phrase = phrase
+                w_used = 2
+                break
+        if length == 1:
+            if word == phrase[0]:
+                inFPhrases = True
+                il_phrase = phrase
+                w_used = 1
+                break
                 
-    return in_F_Phrases, il_phrase, w_used
+    return inFPhrases, il_phrase, w_used
 # end of in_F_Phrases
 
-def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list, il_struct, tl_struct, tl_struct_count):
+def il_translate_smt(sen_poss_list, dict_src, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list, il_struct, tl_struct, tl_struct_count):
     """
     This function translates sentences from the source language (il) to the target language (tl) based on the part-of-speech information and the dictionaries of words and their translations.
     
     Parameters:
         sen_poss_list (list): List of lists of words and their corresponding part-of-speech information.
-        dict_source (dict): Dictionary of words in the source language and their corresponding words in the target language.
+        dict_src (dict): Dictionary of words in the source language and their corresponding words in the target language.
         ''_il_tf_idf_list (list): List of tf-idf scores of pos in the source language.
         il_struct (list): List of structures of sentences in the source language.
         tl_struct (list): List of structures of sentences in the target language.
@@ -223,11 +248,11 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
         sen_translation_list (list): List of sentences translated from the source language to the target language.
     """
 
-    il_phrases = [remove_punct(word) for word in dict_il.il_phrases]
-    il_phrases = [tokenize(word) for word in il_phrases]
+    lang_src = [remove_punct(word) for word in dict_il.lang_src]
+    lang_src = [tokenized(word) for word in lang_src]
 
-    tl_phrases = [remove_punct(word) for word in dict_tl.tl_phrases]
-    tl_phrases = [tokenize(word) for word in tl_phrases]
+    lang_tar = [remove_punct(word) for word in dict_tl.lang_tar]
+    lang_tar = [tokenized(word) for word in lang_tar]
     
     
     not_in_sw = []
@@ -241,7 +266,7 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
     not_tagged = []
     sum_tf_idf_il_list = []
 
-    sum_tf_idf_il_list = get_sum_il(sen_poss_list, dict_source, not_in_sw, not_in_vb, not_in_nn, not_in_jj, not_in_rb, not_in_cc, not_in_pr, not_in_dt, not_tagged, sum_tf_idf_il_list, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list)
+    sum_tf_idf_il_list = get_sum_il(sen_poss_list, dict_src, not_in_sw, not_in_vb, not_in_nn, not_in_jj, not_in_rb, not_in_cc, not_in_pr, not_in_dt, not_tagged, sum_tf_idf_il_list, vb_il_tf_idf_list, nn_il_tf_idf_list, jj_il_tf_idf_list, rb_il_tf_idf_list, cc_il_tf_idf_list, pr_il_tf_idf_list, dt_il_tf_idf_list)
     
     encapsulate(sen_poss_list, ngram_var.fourgram_list, ngram_var.trigram_list, ngram_var.bigram_list, ngram_var.unigram_list, ngram_var.ngram_list, ngram_var.notencap_list, ngram_var.fourgram_count_sen, ngram_var.trigram_count_sen, ngram_var.bigram_count_sen, ngram_var.unigram_count_sen, ngram_var.notencap_count_sen)
     
@@ -252,7 +277,7 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
     sp_index = 0
     sen_translation_list = []
     
-    for sen_poss in sen_poss_list:
+    for pos_src in sen_poss_list:
         """
         sen_poss is a list of POS of a sentence
         eg. ['VB', 'DT', 'NN', 'DT', 'NN']
@@ -261,24 +286,36 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
         wp_index = 0
         cur_wp_index = 0
         
-        for word_pos in sen_poss:
+        for word_pos in pos_src:
             if wp_index == cur_wp_index:
-                word = dict_source['Tokenized'][sp_index][wp_index]
+                word = dict_src['Tokenized'][sp_index][wp_index]
                 
                 try: 
-                    word2 = dict_source['Tokenized'][sp_index][wp_index+1]
+                    word2 = dict_src['Tokenized'][sp_index][wp_index+1]
                 except:
                     word2 = None
                 try:
-                    word3 = dict_source['Tokenized'][sp_index][wp_index+2]
+                    word3 = dict_src['Tokenized'][sp_index][wp_index+2]
                 except:
                     word3 = None
                 try:
-                    word4 = dict_source['Tokenized'][sp_index][wp_index+3]
+                    word4 = dict_src['Tokenized'][sp_index][wp_index+3]
                 except:
                     word4 = None
+                try:
+                    word5 = dict_src['Tokenized'][sp_index][wp_index+4]
+                except:
+                    word5 = None
+                try:
+                    word6 = dict_src['Tokenized'][sp_index][wp_index+5]
+                except:
+                    word6 = None
+                try:
+                    word7 = dict_src['Tokenized'][sp_index][wp_index+6]
+                except:
+                    word7 = None
                 
-                ans = in_F_Phrases(word, word2, word3, word4, il_phrases)
+                ans = in_F_Phrases(word, word2, word3, word4, word5, word6, word7, lang_src)
                 inFPDict = ans[0]
                 il_phrase = ans[1]
                 w_used = ans[2]                
@@ -287,8 +324,8 @@ def il_translate_smt(sen_poss_list, dict_source, vb_il_tf_idf_list, nn_il_tf_idf
                     """
                     if the word is in the list of Tagalog phrases
                     """
-                    p_index = il_phrases.index(il_phrase)
-                    tl_phrase = tl_phrases[p_index]
+                    p_index = lang_src.index(il_phrase)
+                    tl_phrase = lang_tar[p_index]
                     for tl_word in tl_phrase:
                         sen_translation.append(tl_word)
                     cur_wp_index = wp_index + w_used
@@ -458,19 +495,19 @@ def il_smt_trans(source):
     cleaned_source = [remove_punct(word) for word in parsed_source]
     
     # Tokenizing the sentences
-    toklenized_source = [tokenize(word) for word in cleaned_source]
+    tok_src = [tokenized(word) for word in cleaned_source]
     
     # Creating a dataframe to store the tokenized sentences
-    dict_source = pd.DataFrame({'Tokenized': toklenized_source}) 
+    dict_src = pd.DataFrame({'Tokenized': tok_src}) 
     
     # Tagging the parts of speech for each word in the sentences
-    pos_sen_list = tag(dict_source['Tokenized'])
+    pos_sen_list = pos(dict_src['Tokenized'])
     
     # Adding the POS tagged sentences to the dataframe
-    dict_source['POS'] = pos_sen_list
+    dict_src['POS'] = pos_sen_list
     
     # Translating the sentences using the SMT method
-    sen_translation_list = il_translate_smt(dict_source['POS'], dict_source, dict_il.vb_il_tf_idf_list, dict_il.nn_il_tf_idf_list, dict_il.jj_il_tf_idf_list, dict_il.rb_il_tf_idf_list, dict_il.cc_il_tf_idf_list, dict_il.pr_il_tf_idf_list, dict_il.dt_il_tf_idf_list, dict_il.il_struct, dict_il.tl_struct, dict_il.tl_struct_count)
+    sen_translation_list = il_translate_smt(dict_src['POS'], dict_src, dict_il.vb_il_tf_idf_list, dict_il.nn_il_tf_idf_list, dict_il.jj_il_tf_idf_list, dict_il.rb_il_tf_idf_list, dict_il.cc_il_tf_idf_list, dict_il.pr_il_tf_idf_list, dict_il.dt_il_tf_idf_list, dict_il.il_struct, dict_il.tl_struct, dict_il.tl_struct_count)
     
     # Combining the translated words to form complete sentences
     temp_sen_list = combine_tokens(sen_translation_list)
