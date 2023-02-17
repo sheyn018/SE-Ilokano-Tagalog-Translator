@@ -26,9 +26,8 @@ pip install -r requirements.txt
 ## Usage Instruction
 --------------
 1. Check [Dependencies](#dependencies) for the required tools needed, install it then set up.
-2. Import the necessary modules.
-3. Run the python notebook on Jupyter Notebook. 
-4. Enter "http://127.0.0.1:5000" at your browsers URL
+2. Once the dependencies have been installed, you can run the project by running the "main.py" 
+3. Enter "http://127.0.0.1:5000" at your browsers URL
 
 ### Dependencies 
 1. **[Python](#python)** <br>
@@ -46,7 +45,7 @@ The project uses a combination of example-based, rule-based, and statistical mac
 
 ## Evaluation
 
-The translation tool has been evaluated on a test set of Ilokano-Tagalog sentences, achieving an BLEU score of x% for Ilokano to Tagalog and y% for Tagalog to Ilokano.
+The translation tool has been evaluated on a test set of Ilokano-Tagalog sentences, achieving an BLEU score of 55% for Ilokano to Tagalog and 52% for Tagalog to Ilokano.
 
 ## Contribution
 
